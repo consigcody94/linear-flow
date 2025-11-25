@@ -1,67 +1,74 @@
-# Linear Flow
+# 📋 Linear Flow
 
-A Model Context Protocol (MCP) server for Linear project management. Create issues, manage projects, track cycles, and automate your workflow.
+**AI-powered Linear project management - create issues, manage projects, track cycles, and automate your workflow**
 
-## Overview
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue?logo=typescript)](https://www.typescriptlang.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![MCP](https://img.shields.io/badge/MCP-Compatible-green)](https://github.com/anthropics/mcp)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-339933?logo=node.js)](https://nodejs.org/)
+[![Linear](https://img.shields.io/badge/Linear-Compatible-5E6AD2?logo=linear)](https://linear.app/)
 
-Linear Flow connects your AI assistant to Linear, enabling natural language management of your engineering workflow. Create issues, update statuses, manage sprints, and track progress without leaving your conversation.
+---
 
-### Why Use Linear Flow?
+## 🤔 The Project Management Challenge
 
-**Traditional workflow:**
-- Open Linear in browser
-- Navigate to team/project
-- Click through forms to create issues
-- Search for team IDs and state IDs
+**"Context switching to Linear breaks my flow"**
 
-**With Linear Flow:**
-```
-"Create a high-priority bug for the authentication team"
-"What's in the current sprint?"
-"Move FEAT-123 to Done"
-"Create a new project for Q1 platform improvements"
-```
+Every time you need to create an issue, update a status, or check sprint progress, you're switching contexts and losing momentum.
 
-## Features
+- 🖱️ Clicking through UI forms
+- 🔍 Searching for team and state IDs
+- 📊 Checking cycle progress manually
+- 🏷️ Managing labels across projects
 
-- **Issue Management** - Create and update issues with full field control
-- **Team Information** - Retrieve team details and workflow states
-- **Cycle Tracking** - Get active cycle progress and metrics
-- **Project Creation** - Create projects with team associations
-- **Label Management** - Create custom labels with colors
+**Linear Flow keeps you in the zone** - manage your entire Linear workflow through natural language without leaving your editor.
 
-## Installation
+---
+
+## ✨ Features
+
+| Feature | Description |
+|---------|-------------|
+| 🎫 **Issue Management** | Create and update issues with full field control |
+| 👥 **Team Information** | Retrieve team details and workflow states |
+| 🔄 **Cycle Tracking** | Get active cycle progress and metrics |
+| 📁 **Project Creation** | Create projects with team associations |
+| 🏷️ **Label Management** | Create custom labels with colors |
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Node.js 18+
+- Linear account with API key
+- Claude Desktop
+
+### Installation
 
 ```bash
-# Clone the repository
 git clone https://github.com/consigcody94/linear-flow.git
 cd linear-flow
-
-# Install dependencies
 npm install
-
-# Build the project
 npm run build
 ```
 
-## Configuration
-
-### Getting Your API Key
+### Get Your API Key
 
 1. Go to [Linear Settings](https://linear.app/settings/api)
 2. Click "Create key" under "Personal API keys"
 3. Give it a label (e.g., "MCP Server")
 4. Copy the generated key (starts with `lin_api_`)
 
-### Environment Variable
+### Configure Claude Desktop
 
-```bash
-export LINEAR_API_KEY="lin_api_your_key_here"
-```
+Add to your config file:
 
-### Claude Desktop Integration
-
-Add to your `claude_desktop_config.json`:
+| Platform | Path |
+|----------|------|
+| macOS | `~/Library/Application Support/Claude/claude_desktop_config.json` |
+| Windows | `%APPDATA%\Claude\claude_desktop_config.json` |
+| Linux | `~/.config/Claude/claude_desktop_config.json` |
 
 ```json
 {
@@ -77,61 +84,82 @@ Add to your `claude_desktop_config.json`:
 }
 ```
 
-**Config file locations:**
-- macOS: `~/Library/Application Support/Claude/claude_desktop_config.json`
-- Windows: `%APPDATA%\Claude\claude_desktop_config.json`
-- Linux: `~/.config/Claude/claude_desktop_config.json`
+### Restart Claude Desktop
+Completely quit and reopen Claude Desktop to load the MCP server.
 
-## Tools Reference
+---
+
+## 💬 Usage Examples
+
+### Create Issues
+```
+"Create a high-priority bug for the authentication team"
+→ Creates issue with priority 2 (High) assigned to ENG team
+
+"Add a feature request for implementing OAuth2 with detailed requirements"
+→ Creates issue with markdown description and proper labeling
+```
+
+### Track Progress
+```
+"What's in the current sprint?"
+→ Returns cycle info with issue count, completion %, and dates
+
+"Show me the ENG team's workflow states"
+→ Lists all states with IDs for transitions
+```
+
+### Manage Workflow
+```
+"Move FEAT-123 to In Progress"
+→ Updates issue state to in_progress
+
+"Create a new project for Q1 platform improvements"
+→ Creates project linked to specified teams
+```
+
+### Organize with Labels
+```
+"Create a tech-debt label with red color for the ENG team"
+→ Creates label with hex color #FF6B6B
+
+"Add the urgent label to the login bug"
+→ Updates issue with new label
+```
+
+---
+
+## 🛠️ Available Tools
+
+| Tool | Description |
+|------|-------------|
+| `create_issue` | Create a new issue in Linear |
+| `update_issue` | Update an existing issue |
+| `get_team` | Get team information including workflow states |
+| `get_cycle` | Get cycle (sprint) information |
+| `create_project` | Create a new project |
+| `add_label` | Create a new label for a team |
+
+---
+
+## 📊 Tool Details
 
 ### create_issue
 
 Create a new issue in Linear.
 
-**Parameters:**
-
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `title` | string | Yes | Issue title |
-| `teamId` | string | Yes | Team ID or key |
+| `teamId` | string | Yes | Team ID or key (e.g., "ENG") |
 | `description` | string | No | Issue description (markdown) |
 | `priority` | number | No | 0=None, 1=Urgent, 2=High, 3=Medium, 4=Low |
 | `assigneeId` | string | No | User ID to assign |
 | `labelIds` | string[] | No | Array of label IDs |
 
-**Example - Simple issue:**
-
-```json
-{
-  "title": "Fix login button alignment",
-  "teamId": "ENG"
-}
-```
-
-**Example - Full issue:**
-
-```json
-{
-  "title": "Implement OAuth2 authentication",
-  "teamId": "BACKEND",
-  "description": "## Requirements\n\n- Google OAuth support\n- GitHub OAuth support\n- Token refresh handling\n\n## Acceptance Criteria\n\n- [ ] Users can sign in with Google\n- [ ] Users can sign in with GitHub\n- [ ] Tokens refresh automatically",
-  "priority": 2,
-  "assigneeId": "user_abc123",
-  "labelIds": ["label_feature", "label_auth"]
-}
-```
-
-**Response includes:**
-- Issue ID and identifier (e.g., `ENG-123`)
-- Issue URL
-- Current state
-- Priority level
-
 ### update_issue
 
 Update an existing issue.
-
-**Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -142,66 +170,26 @@ Update an existing issue.
 | `stateId` | string | No | New state ID |
 | `assigneeId` | string | No | New assignee ID |
 
-**Example:**
-
-```json
-{
-  "issueId": "issue_abc123",
-  "priority": 1,
-  "stateId": "state_in_progress"
-}
-```
-
 ### get_team
 
 Get team information including workflow states.
-
-**Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `teamId` | string | Yes | Team ID or key (e.g., "ENG") |
 
-**Example:**
-
-```json
-{
-  "teamId": "ENG"
-}
-```
-
 **Response includes:**
 - Team ID, key, and name
-- Team description
 - Workflow states with IDs, names, types, and colors
 
 ### get_cycle
 
 Get cycle (sprint) information.
 
-**Parameters:**
-
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `teamId` | string | Yes | Team ID |
 | `cycleId` | string | No | Specific cycle (default: active) |
-
-**Example - Active cycle:**
-
-```json
-{
-  "teamId": "ENG"
-}
-```
-
-**Example - Specific cycle:**
-
-```json
-{
-  "teamId": "ENG",
-  "cycleId": "cycle_abc123"
-}
-```
 
 **Response includes:**
 - Cycle ID and number
@@ -213,8 +201,6 @@ Get cycle (sprint) information.
 
 Create a new project.
 
-**Parameters:**
-
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
 | `name` | string | Yes | Project name |
@@ -223,28 +209,9 @@ Create a new project.
 | `targetDate` | string | No | Target date (ISO 8601) |
 | `state` | string | No | planned, started, paused, completed, canceled |
 
-**Example:**
-
-```json
-{
-  "name": "Q1 Platform Improvements",
-  "teamIds": ["team_backend", "team_frontend"],
-  "description": "Core platform enhancements for Q1 2024",
-  "targetDate": "2024-03-31",
-  "state": "started"
-}
-```
-
-**Response includes:**
-- Project ID and name
-- Project URL
-- State and target date
-
 ### add_label
 
 Create a new label for a team.
-
-**Parameters:**
 
 | Parameter | Type | Required | Description |
 |-----------|------|----------|-------------|
@@ -253,18 +220,20 @@ Create a new label for a team.
 | `color` | string | No | Hex color (e.g., "#FF6B6B") |
 | `description` | string | No | Label description |
 
-**Example:**
+---
 
-```json
-{
-  "name": "tech-debt",
-  "teamId": "ENG",
-  "color": "#FF6B6B",
-  "description": "Technical debt to address"
-}
-```
+## 🔑 Finding IDs
 
-## Workflow Examples
+| ID Type | How to Find |
+|---------|-------------|
+| Team ID | Use team key directly (e.g., "ENG") or find in URL: `linear.app/team/TEAM_KEY` |
+| State IDs | Use `get_team` to list all states with their IDs |
+| User IDs | Find in Linear settings or API |
+| Label IDs | Created labels return their ID |
+
+---
+
+## 🎯 Workflow Examples
 
 ### Bug Triage Workflow
 
@@ -273,7 +242,7 @@ Create a new label for a team.
    create_issue with title: "Login fails on Safari", teamId: "ENG", priority: 2
    ```
 
-2. **Get team states to find the triage state:**
+2. **Get team states:**
    ```
    get_team with teamId: "ENG"
    ```
@@ -290,93 +259,66 @@ Create a new label for a team.
    get_cycle with teamId: "ENG"
    ```
 
-2. **Create issues for the sprint:**
+2. **Create sprint issues:**
    ```
    create_issue with title: "...", teamId: "ENG", ...
    ```
 
-3. **Create a project to group them:**
+3. **Create organizing project:**
    ```
    create_project with name: "Sprint 5 Goals", teamIds: ["ENG"]
    ```
 
-### Feature Development
+---
 
-1. **Create feature label:**
-   ```
-   add_label with name: "new-feature", teamId: "ENG", color: "#4CAF50"
-   ```
+## 🔒 Security Notes
 
-2. **Create feature issue:**
-   ```
-   create_issue with title: "...", teamId: "ENG", labelIds: ["label_new_feature"]
-   ```
+| Principle | Description |
+|-----------|-------------|
+| Never commit keys | Keep API keys out of version control |
+| Full access | API keys have full workspace access |
+| Rotate regularly | Change keys periodically |
+| Separate keys | Use different keys for different apps |
 
-3. **Update progress:**
-   ```
-   update_issue with issueId: "...", stateId: "state_in_progress"
-   ```
+---
 
-## Finding IDs
+## 🐛 Troubleshooting
 
-### Team ID
-- Use team key directly (e.g., "ENG", "BACKEND")
-- Or find in Linear URL: `linear.app/team/TEAM_KEY`
+| Issue | Solution |
+|-------|----------|
+| "LINEAR_API_KEY required" | Set the API key in Claude Desktop config |
+| "Team not found" | Verify team key/ID and API key permissions |
+| Issue creation fails | Check teamId is valid, required fields provided |
+| State transition fails | Get valid state IDs with `get_team` |
 
-### State IDs
-Use `get_team` to list all states with their IDs
+---
 
-### User IDs
-- Find in Linear settings or API
-- Or use the Linear GraphQL API explorer
-
-### Label IDs
-- Created labels return their ID
-- Or query via Linear API
-
-## Requirements
+## 📋 Requirements
 
 - Node.js 18 or higher
 - Linear API key
 - Active Linear workspace
 
-## Troubleshooting
+---
 
-### "LINEAR_API_KEY environment variable is required"
-
-Ensure the API key is set in your environment or Claude Desktop config.
-
-### "Team not found"
-
-1. Verify the team key/ID is correct
-2. Ensure your API key has access to that team
-
-### Issue creation fails
-
-1. Check that teamId is valid
-2. Verify required fields are provided
-3. Ensure assigneeId/labelIds exist if provided
-
-### State transition fails
-
-1. Get valid state IDs using `get_team`
-2. Ensure the transition is allowed in your workflow
-
-## Security Notes
-
-- Never commit API keys to version control
-- API keys have full access to your Linear workspace
-- Rotate keys periodically
-- Use separate keys for different applications
-
-## License
-
-MIT License - see [LICENSE](LICENSE) file for details.
-
-## Contributing
+## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
 
-## Author
+---
 
-consigcody94
+## 📄 License
+
+MIT License - see [LICENSE](LICENSE) file for details.
+
+---
+
+## 👤 Author
+
+**consigcody94**
+
+---
+
+<p align="center">
+  <i>Stay in flow while managing your workflow.</i>
+</p>
